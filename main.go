@@ -1,24 +1,33 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
 
-	"github.com/GustavoMinelli/golang-excel-processing/internal/database"
-	"github.com/GustavoMinelli/golang-excel-processing/internal/excel"
+	"github.com/GustavoMinelli/golang-excel-processing/internal/handlers"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 // Main function
 func main() {
+	lambda.Start(router)
+}
 
-	database.Connect()
-	data, err := database.GetData()
-	defer database.CloseConnection()
+// Router
+func router(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
-	if err != nil {
-		fmt.Println(err)
-		return
+	if req.Path == "/excel" {
+
+		if req.HTTPMethod == "POST" {
+			return handlers.HandleExcel(req), nil
+		}
+
 	}
 
-	excel.ExportData(data)
+	//Method not fonud
+	return events.APIGatewayProxyResponse{
+		StatusCode: http.StatusNotFound,
+		Body:       http.StatusText(http.StatusNotFound),
+	}, nil
 
 }

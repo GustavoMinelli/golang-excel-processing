@@ -26,7 +26,7 @@ func Connect() {
 
 }
 
-func GetData() ([]map[string]any, error) {
+func GetData(query string) ([]map[string]any, error) {
 
 	rows, err := db.Query("SELECT * FROM table WHERE table.relation_id = 1")
 
