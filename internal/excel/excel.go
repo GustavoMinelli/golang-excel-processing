@@ -7,7 +7,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func ExportData(data []map[string]any) {
+func ExportData(data []map[string]any, path string) {
 
 	excel := excelize.NewFile()
 
@@ -35,7 +35,7 @@ func ExportData(data []map[string]any) {
 	// Set active sheet of the workbook.
 	excel.SetActiveSheet(index)
 
-	outputPath := filepath.Join("output", "Test.xlsx")
+	outputPath := filepath.Join(path, "Test.xlsx")
 
 	// Save xlsx file by the given path.
 	if err := excel.SaveAs(outputPath); err != nil {

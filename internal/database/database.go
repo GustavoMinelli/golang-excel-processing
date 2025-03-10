@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/GustavoMinelli/golang-excel-processing/internal"
 	_ "github.com/lib/pq"
 )
 
@@ -12,23 +13,25 @@ var db *sql.DB
 func Connect() {
 
 	var err error
+	config, err := internal.GetConfig()
+	database := config.Database
 
-	// Connect to the database
-	db, err = sql.Open("postgres", "user=postgres dbname=todo password=postgres sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+
+	db, err = sql.Open("postgres", fmt.Sprintf("user=%s dbname=%s password=%s sslmode=%s", database.User, database.Name, database.Password, database.Sslmode))
 
 	// Check for errors
 	if err != nil {
 		panic(err)
 	}
 
-	// Print a success message
-	fmt.Println("Successfully connected to the database!")
-
 }
 
 func GetData(query string) ([]map[string]any, error) {
 
-	rows, err := db.Query("SELECT * FROM table WHERE table.relation_id = 1")
+	rows, err := db.Query(query)
 
 	if err != nil {
 		return nil, err

@@ -3,14 +3,15 @@ package main
 import (
 	"net/http"
 
+	"github.com/GustavoMinelli/golang-excel-processing/internal/database"
 	"github.com/GustavoMinelli/golang-excel-processing/internal/handlers"
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
 // Main function
 func main() {
-	lambda.Start(router)
+	// ?	lambda.Start(router)
+	sandBox()
 }
 
 // Router
@@ -29,5 +30,11 @@ func router(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, 
 		StatusCode: http.StatusNotFound,
 		Body:       http.StatusText(http.StatusNotFound),
 	}, nil
+
+}
+
+func sandBox() {
+
+	database.Connect()
 
 }

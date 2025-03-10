@@ -1,0 +1,9 @@
+{
+    "database": {
+        "host": "postgres",
+        "user": "postgres",
+        "name": "soroban",
+        "password": "postgres",
+        "ssl-mode": "disable"
+    }
+}
