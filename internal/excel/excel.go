@@ -7,7 +7,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func ExportData(data []map[string]any, path string) {
+func ExportData(data []map[string]any, path string, fileName string, rowTitle []string) error {
 
 	excel := excelize.NewFile()
 
@@ -15,19 +15,20 @@ func ExportData(data []map[string]any, path string) {
 	index, err := excel.NewSheet("Date")
 
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	excel.SetCellValue("Date", "A1", "Date")
 	excel.SetCellValue("Date", "B1", "Value")
 
-	for i := 0; i < len(data); i++ {
+	for i, row := range data {
+		date := row["date"]
+		value := row["value"]
 
-		date := data[i]["date"]
-		value := data[i]["value"]
+		for j, title := range rowTitle {
+			excel.SetCellValue("Date", fmt.Sprintf("%s%d", string(rune(65+j)), 1), title)
+		}
 
-		// Set value of a cell.
 		excel.SetCellValue("Date", fmt.Sprintf("A%d", i+2), date)
 		excel.SetCellValue("Date", fmt.Sprintf("B%d", i+2), value)
 	}
@@ -39,10 +40,8 @@ func ExportData(data []map[string]any, path string) {
 
 	// Save xlsx file by the given path.
 	if err := excel.SaveAs(outputPath); err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
-	println("Excel file created successfully!")
-
+	return nil
 }
