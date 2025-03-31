@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/GustavoMinelli/golang-excel-processing/internal/database"
@@ -21,19 +22,16 @@ func HandleExcel(req events.APIGatewayProxyRequest) events.APIGatewayProxyRespon
 
 	var excelRequest Excel
 
-	// Validate the request
-	err := validator.Validate(req, &excelRequest)
-
-	err = json.Unmarshal([]byte(req.Body), &excelRequest)
+	err := json.Unmarshal([]byte(req.Body), &excelRequest)
 
 	if err != nil {
 		return HandleError(err)
 	}
 
-	query := req.QueryStringParameters["query"]
+	fmt.Printf("Received request: %+v\n", excelRequest)
 
 	database.Connect()
-	data, err := database.GetData(query)
+	data, err := database.GetData(excelRequest.Query)
 	defer database.CloseConnection()
 
 	if err != nil {
